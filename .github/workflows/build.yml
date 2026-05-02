@@ -1,0 +1,29 @@
+name: Build Custom Bazzite
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: my-bazzite
+          tags: latest
+          containerfiles: ./Containerfile
+
+      - name: Push to GHCR
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: my-bazzite
+          tags: latest
+          registry: ghcr.io/${{ github.actor }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
