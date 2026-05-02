@@ -1,6 +1,10 @@
 FROM ghcr.io/ublue-os/bazzite:stable
 
-RUN curl -Lo /etc/yum.repos.d/rtl8821ce.repo \
-    https://copr.fedorainfracloud.org/coprs/thopiekar/rtl8821ce/repo/fedora-$(rpm -E %fedora)/thopiekar-rtl8821ce-fedora-$(rpm -E %fedora).repo && \
-    rpm-ostree install akmod-rtl8821ce && \
+RUN rpm-ostree install dkms kernel-devel git && \
+    git clone https://github.com/tomaspinho/rtl8821ce /tmp/rtl8821ce && \
+    cd /tmp/rtl8821ce && \
+    make && make install && \
+    rm -rf /tmp/rtl8821ce && \
+    touch /etc/modprobe.d/blacklist.conf && \
+    echo "blacklist rtw88_8821ce" >> /etc/modprobe.d/blacklist.conf && \
     rpm-ostree cleanup -m
