@@ -33,8 +33,8 @@ jobs:
       - name: Push to GHCR
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: my-bazzite
+          image: ${{ github.actor }}/my-bazzite
           tags: latest
-          registry: ghcr.io/${{ github.actor }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
